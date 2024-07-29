@@ -1,8 +1,9 @@
 from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
-from .models import Post
-from .forms import EmailPostForm
+from .models import Post, Comment
+from .forms import EmailPostForm, CommentForm
 
 # ----------------------------------------------------------------------------------------------------------------
 # for class-based views, you also need modify urls.py in app and in list.html template
@@ -43,6 +44,33 @@ def post_list(request):
     return render(request, 'bloggy/list.html', context=context)
 
 
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(
+        Post,
+        id=post_id,
+        status=Post.Status.PUBLISHED,
+    )
+    comment = None
+    # comment was posted
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        # Create a Comment object without saving it to the database
+        comment = form.save(commit=False)
+        # Assign the current post to the comment
+        comment.post = post
+        # Save the comment to the database
+        comment.save()
+    
+    context = {
+        'title': 'Post Comment',
+        'post': post,
+        'form': form,
+        'comment': comment,
+    }
+    return render(request, 'bloggy/comment.html', context=context)
+
+
 def post_detail(request, year, month, day, post_slug):
     post = get_object_or_404(
         Post,
@@ -52,11 +80,19 @@ def post_detail(request, year, month, day, post_slug):
         slug=post_slug,
         status=Post.Status.PUBLISHED)
     
+    # active comments for current post
+    comments = post.comments.filter(active=True)
+    # form for users to comment
+    form = CommentForm()
+    
     context = {
         'title': post.title,
         'post': post,
+        'comments': comments,
+        'form': form,
     }
     return render(request, 'bloggy/detail.html', context=context)
+
 
 
 def post_share(request, post_id):
@@ -93,5 +129,7 @@ def post_share(request, post_id):
         'form': form,
         'sent': sent,
     }
-    
     return render(request, 'bloggy/share.html', context=context)
+
+
+

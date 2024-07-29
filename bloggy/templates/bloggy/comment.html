@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    {% if comment %}
+    	<h3>Your comment was successfully added!</h3>
+        <p>
+        <a href="{{ post.get_absolute_url }}">Back to Post</a>
+        </p>
+    {% else %}
+        {% include 'bloggy/includes/comment_form.html' %}
+    {% endif %}
+
+{% endblock %}
