@@ -7,4 +7,7 @@
     Published {{ post.publish }} by {{ post.author }}
   </p>
     {{ post.body|linebreaks }}
+    <p>
+        <a href="{% url 'bloggy:share' post.id %}">Share this post</a>
+    </p>
 {% endblock %}
