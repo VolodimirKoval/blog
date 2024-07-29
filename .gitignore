@@ -1,7 +1,8 @@
 .env
 /env
+/migrations
 
 __pycache__
-media
+
 db.sqlite3
 
