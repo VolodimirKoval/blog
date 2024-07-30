@@ -3,15 +3,18 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
 from django.urls import reverse
+# ---------------------for adding tags to posts---------------------
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
-    
+
 
 class Post(models.Model):
-    
+    # adding tags to posts
+    tags = TaggableManager()
     # override manager to show only published posts, default manager is 'objects'
     objects = models.Manager()
     published = PublishedManager()
@@ -76,14 +79,13 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-
+    
     class Meta:
         db_table = 'post_comments'
         ordering = ['created']
         indexes = [
-            models.Index(fields=['created',])
-            ]
+            models.Index(fields=['created', ])
+        ]
     
     def __str__(self):
         return f"Comment by `{self.name}` to ***{self.post.title}*** post"
-    

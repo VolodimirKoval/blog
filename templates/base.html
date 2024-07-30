@@ -1,3 +1,4 @@
+{% load blog_tags %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -13,7 +14,25 @@
     </div>
   <div id="sidebar">
       <h2><a href="{% url 'bloggy:index' %}">My blog</a></h2>
-      <p>This is my blog.</p>
+      <p>
+          This is my blog.
+          <br>
+          <br>
+          Site contains {% total_posts %} posts.
+      </p>
+      <h3>
+          Latest posts
+          {% show_latest_posts 4 %}
+      </h3>
+      <h3>Most commented posts</h3>
+      {% show_most_commented_posts as most_commented_posts %}
+      <ul>
+          {% for post in most_commented_posts %}
+          	<li>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            </li>
+          {% endfor %}
+      </ul>
   </div>
 </body>
 </html>

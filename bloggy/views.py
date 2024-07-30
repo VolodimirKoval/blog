@@ -4,6 +4,9 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
 from .forms import EmailPostForm, CommentForm
+from django.db.models import Count
+# -------------------------------for tag navigation---------------------------------------------------------------
+from taggit.models import Tag
 
 # ----------------------------------------------------------------------------------------------------------------
 # for class-based views, you also need modify urls.py in app and in list.html template
@@ -26,8 +29,13 @@ class PostListView(ListView):
 
 # ----------------------------------------------------------------------------------------------------------------
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     posts_list = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        posts_list = posts_list.filter(tags__in=[tag])
+    # pagination
     paginator = Paginator(posts_list, 3)
     page_number = request.GET.get('page')
     try:
@@ -39,8 +47,8 @@ def post_list(request):
     context = {
         'title': 'Posts',
         'posts': posts,
+        'tag': tag,
     }
-    
     return render(request, 'bloggy/list.html', context=context)
 
 
@@ -85,14 +93,20 @@ def post_detail(request, year, month, day, post_slug):
     # form for users to comment
     form = CommentForm()
     
+    # list of similar posts
+    # You pass flat=True to it to get single values such as [1, 2, 3, ...] instead of one tuple such as [(1,), (2,), (3,) ...].
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+    
     context = {
         'title': post.title,
         'post': post,
         'comments': comments,
         'form': form,
+        'similar_posts': similar_posts,
     }
     return render(request, 'bloggy/detail.html', context=context)
-
 
 
 def post_share(request, post_id):
@@ -130,6 +144,3 @@ def post_share(request, post_id):
         'sent': sent,
     }
     return render(request, 'bloggy/share.html', context=context)
-
-
-
