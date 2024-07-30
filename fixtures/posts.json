@@ -1,0 +1,184 @@
+[
+{
+    "model": "bloggy.post",
+    "pk": 1,
+    "fields": {
+        "title": "Post-1",
+        "slug": "post-1",
+        "body": "We have imported the projectТs settings and we have added an author field to the Post model. This field defines a many-to-one relationship with the default user model, meaning that each post is written by a user, and a user can write any number of posts. For this field, Django will create a foreign key in the database using the primary key of the related model.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:53:40.629Z",
+        "updated": "2024-07-28T14:53:40.629Z",
+        "status": "PB",
+        "author": 2
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 2,
+    "fields": {
+        "title": "Post-2",
+        "slug": "post-2",
+        "body": "The on_delete parameter specifies the behavior to adopt when the referenced object is deleted. This is not specific to Django; it is a SQL standard. Using CASCADE, you specify that when the referenced user is deleted, the database will also delete all related blog posts. You can take a look at all the possi- ble options at https://docs.djangoproject.com/en/5.0/ref/models/fields/#django.db.models. ForeignKey.on_delete.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:53:57.950Z",
+        "updated": "2024-07-29T16:15:07.671Z",
+        "status": "PB",
+        "author": 1
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 3,
+    "fields": {
+        "title": "Post-3",
+        "slug": "post-3",
+        "body": "We use related_name to specify the name of the reverse relationship, from User to Post. This will allow us to access related objects easily from a user object by using the user.blog_posts notation. We will learn more about this later.\r\nDjango comes with different types of fields that you can use to define your models. You can find all field types at https://docs.djangoproject.com/en/5.0/ref/models/fields/.\r\nThe Post model is now complete, and we can now synchronize it to the database.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:54:13.103Z",
+        "updated": "2024-07-29T16:15:17.195Z",
+        "status": "PB",
+        "author": 2
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 4,
+    "fields": {
+        "title": "Post-4",
+        "slug": "post-4",
+        "body": "Creating and applying migrations\r\nNow that we have a data model for blog posts, we need to create the corresponding database table. Django comes with a migration system that tracks the changes made to models and enables them to propagate into the database.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:54:28.493Z",
+        "updated": "2024-07-29T16:15:32.083Z",
+        "status": "PB",
+        "author": 2
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 5,
+    "fields": {
+        "title": "Post-5",
+        "slug": "post-5",
+        "body": "The migrate command applies migrations for all applications listed in INSTALLED_APPS. It synchro- nizes the database with the current models and existing migrations.\r\nFirst, we will need to create an initial migration for our Post model.\r\nRun the following command in the shell prompt from the root directory of your project:",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:54:45.791Z",
+        "updated": "2024-07-29T16:15:43.116Z",
+        "status": "PB",
+        "author": 1
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 6,
+    "fields": {
+        "title": "Post-6",
+        "slug": "post-6",
+        "body": "This is the data model for blog posts. Posts will have a title, a short label called slug, and a body. LetТs take a look at the fields of this model:\r\nХ        title: This is the field for the post title. This is a CharField field that translates into a VARCHAR column in the SQL database.\r\nХ slug: This is a SlugField field that translates into a VARCHAR column in the SQL database. A slug is a short label that contains only letters, numbers, underscores, or hyphens. A post with the title Django Reinhardt: A legend of Jazz could have a slug like django-reinhardt-legend-jazz. We will use the slug field to build beautiful, SEO-friendly URLs for blog posts in Chapter 2, Enhancing Your Blog with Advanced Features.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:55:09.579Z",
+        "updated": "2024-07-29T16:16:00.268Z",
+        "status": "PB",
+        "author": 1
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 7,
+    "fields": {
+        "title": "Post-7",
+        "slug": "post-7",
+        "body": "We have also added a __str__() method to the model class. This is the default Python method to return a string with the human-readable representation of the object. Django will use this method to display the name of the object in many places, such as the Django administration site.\r\nLetТs take a look at how the model and its fields will be translated into a database table and columns. The following diagram shows the Post model and the corresponding database table that Django will create when we synchronize the model to the database:",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:55:21.899Z",
+        "updated": "2024-07-29T16:16:24.101Z",
+        "status": "DF",
+        "author": 1
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 8,
+    "fields": {
+        "title": "Post-8",
+        "slug": "post-8",
+        "body": "Django will create a database column for each of the model fields: title, slug, and body. You can see how each field type corresponds to a database data type.\r\nBy default, Django adds an auto-incrementing primary key field to each model. The field type for this field is specified in each application configuration or globally in the DEFAULT_AUTO_FIELD setting. When creating an application with the startapp command, the default value for DEFAULT_AUTO_FIELD is BigAutoField. This is a 64-bit integer that automatically increments according to available IDs. If you donТt specify a primary key for your model, Django adds this field automatically. You can also define one of the model fields to be the primary key by setting primary_key=True on it.\r\nWe will expand the Post model with additional fields and behaviors. Once complete, we will synchro- nize it to the database by creating a database migration and applying it.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:55:36.607Z",
+        "updated": "2024-07-29T16:16:07.627Z",
+        "status": "PB",
+        "author": 1
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 9,
+    "fields": {
+        "title": "Post-9",
+        "slug": "post-9",
+        "body": "We have added a publish field to the Post model. This is a DateTimeField field that translates into a DATETIME column in the SQL database. We will use it to store the date and time when the post was published. We use DjangoТs timezone.now method as the default value for the field. Note that we imported the timezone module to use this method. timezone.now returns the current datetime in a timezone-aware format. You can think of it as a timezone-aware version of the standard Python datetime.now method.",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:55:51.749Z",
+        "updated": "2024-07-29T16:16:28.761Z",
+        "status": "DF",
+        "author": 2
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 10,
+    "fields": {
+        "title": "Post-10",
+        "slug": "post-10",
+        "body": "To use database-generated default values, we use the db_default attribute instead of default. In this example, we use the Now database function. It serves a similar purpose to default=timezone.now, but instead of a Python-generated datetime, it uses the NOW() database function to produce the initial value. You can read more about the db_default attribute at https://docs.djangoproject.com/en/5.0/ref/ models/fields/#django.db.models.Field.db_default. You can find all available database functions at https://docs.djangoproject.com/en/5.0/ref/models/database-functions/.\r\nLetТs continue with the previous version of the field:",
+        "publish": "2024-07-28T14:53:11Z",
+        "created": "2024-07-28T14:56:05.521Z",
+        "updated": "2024-07-29T16:16:32.870Z",
+        "status": "DF",
+        "author": 1
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 11,
+    "fields": {
+        "title": "Post-11",
+        "slug": "post-11",
+        "body": "Post from SHELL",
+        "publish": "2024-07-28T16:42:25Z",
+        "created": "2024-07-28T16:45:14.071Z",
+        "updated": "2024-07-29T16:14:56.795Z",
+        "status": "PB",
+        "author": 2
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 12,
+    "fields": {
+        "title": "New post",
+        "slug": "new-post",
+        "body": "Trenning is running!",
+        "publish": "2024-07-30T11:28:29Z",
+        "created": "2024-07-30T11:35:52.495Z",
+        "updated": "2024-07-30T11:37:34.145Z",
+        "status": "PB",
+        "author": 2
+    }
+},
+{
+    "model": "bloggy.post",
+    "pk": 13,
+    "fields": {
+        "title": "Post with Markdown",
+        "slug": "post-with-markdown",
+        "body": "This is a post formatted with markdown \r\n--------------------------------------\r\n*This is emphasized* and **this is more emphasized**.\r\nHere is a list:\r\n* One\r\n* Two\r\n* Three\r\nAnd a [link to the Django website](https://www.djangoproject.com/).",
+        "publish": "2024-07-30T15:34:32Z",
+        "created": "2024-07-30T15:35:23.987Z",
+        "updated": "2024-07-30T15:36:22.151Z",
+        "status": "PB",
+        "author": 1
+    }
+}
+]
