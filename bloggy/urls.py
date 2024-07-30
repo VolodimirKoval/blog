@@ -1,7 +1,6 @@
 from django.urls import path
 from bloggy import views
 
-
 app_name = 'bloggy'
 
 urlpatterns = [

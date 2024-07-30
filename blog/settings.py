@@ -25,6 +25,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # SITE MAP
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+    
     
     # 3rd party apps
     'taggit',
@@ -125,3 +129,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+
+# SITE MAP
+SITE_ID = 1

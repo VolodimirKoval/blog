@@ -20,6 +20,9 @@
           <br>
           Site contains {% total_posts %} posts.
       </p>
+      <p>
+          <a href="{% url "post_feed" %}">Subscribe to my RSS feed</a>
+      </p>
       <h3>
           Latest posts
           {% show_latest_posts 4 %}
