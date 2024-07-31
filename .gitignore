@@ -1,8 +1,6 @@
 .env
 /env
-/migrations
-
 __pycache__
-
+.idea
 db.sqlite3
 

@@ -3,11 +3,17 @@ from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 from django.db.models import Count
+# ------------------------FOR SEARCHING RANC--------------------------------------------------------------------
+from django.contrib.postgres.search import (
+    SearchVector,
+    SearchQuery,
+    SearchRank )
+# -------------------------FOR TRIGRAM SEARCH--------------------------------------------------------------------
+from django.contrib.postgres.search import TrigramSimilarity
 # -------------------------------for tag navigation---------------------------------------------------------------
 from taggit.models import Tag
-
 # ----------------------------------------------------------------------------------------------------------------
 # for class-based views, you also need modify urls.py in app and in list.html template
 # override parameter: {% include 'includes/paginator.html' with page=posts %} to
@@ -144,3 +150,27 @@ def post_share(request, post_id):
         'sent': sent,
     }
     return render(request, 'bloggy/share.html', context=context)
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = (
+                Post.published.annotate(
+                    similarity=TrigramSimilarity('title', query),
+                ).filter(similarity__gt=0.1).order_by('-similarity')
+            )
+    
+    context = {
+        'title': 'Search results',
+        'form': form,
+        'query': query,
+        'results': results,
+    }
+    return render(request, 'bloggy/search.html', context=context)
